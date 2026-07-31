@@ -1,4 +1,4 @@
-# Halal Food Guide
+# Halal Food Guide v2.0
 
 A lightweight, web-based Halal food guide helper application. Search for ingredients or E-codes (food additive emulsifier codes) to find out whether their status is Halal, Haram, or Syubhat (doubtful).
 
