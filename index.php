@@ -1,54 +1,36 @@
 <?php
-//-- database configuration
-$dbhost='localhost';
-$dbuser='root';
-$dbpass='';
-$dbname='db_halal';
-//-- database connection
-$db=new mysqli($dbhost,$dbuser,$dbpass,$dbname);
-$rst="";
-$s="1";
-if(isset($_GET['q'])){
-  $s=isset($_GET['s'])?$_GET['s']:$s;
-  $query=$_GET['q'];
-  if($s=="1"){
-    $qry="SELECT a.id,a.iname,a.ecode,b.status_nm,a.desc  "
-        ."FROM ingredient a "
-        ."LEFT JOIN status b on a.id_status=b.id "
-        ."WHERE a.iname LIKE '%".$query."%'";
-  }else{
-    $qry="SELECT a.id,a.iname,a.ecode,b.status_nm,a.desc  "
-        ."FROM ecode a "
-        ."LEFT JOIN status b on a.id_status=b.id "
-        ."WHERE a.ecode LIKE '%".$query."%'";    
-  }     
-  $rst="containing <b>".$query."</b></div>\n";    
-}else{
-  $query=isset($_GET['l'])?$_GET['l']:"a";
-  $qry="SELECT a.id,a.iname,a.ecode,b.status_nm,a.desc  "
-      ."FROM ingredient a "
-      ."LEFT JOIN status b on a.id_status=b.id "
-      ."WHERE a.iname LIKE '".$query."%'";
-  $rst="starting with letter <b>".strtoupper($query)."</b></div>\n";
-} 
-$res=$db->query($qry) or die("Having error in execution ==".$db->error);
-$i=0;
-$html="<div class=\"clearHead\"><div class=\"iname\"><b>Ingredient</b></div><div class=\"stat\"><b>Status</b></div></div>\n";
-while($row=$resi->fetch_row())
-{
-  $html.="<div class=\"clear\">"
-        ."<div class=\"iname\" id=\"lnk".$row[0]."\" href=\"#load".$row[0]."\" rel=\"#load".$row[0]."\" title=\"".($s=="1"?$row[1]:$row[2])."\">".($s=="1"?$row[1]:$row[2])."</div>"
-        ."<div class=\"stat\" title=\"".$row[3]."\">".$row[3]."</div>\n"
-        ."<div class=\"desc\" id=\"load".$row[0]."\">"
-        ."<b>Name</b> : ".$row[1]."<br />"
-        .($row[2]!=""?"<b>E-Code</b> : ".$row[2]."<br />":"")
-        ."<b>Status</b> : ".$row[3]."<br />"
-        ."<b>Description</b><br />".$row[4]."</div></div>\n";
-  $i++;
-}
-?><html lang="en">
+/*
+================================================================================
+ *  BISMILLAAHIRRAHMAANIRRAHIIM - In the Name of Allah, Most Gracious, Most Merciful
+================================================================================
+FILENAME     : index.php
+AUTHOR       : CAHYA DSN
+CREATED DATE : 2026-07-31 08:00:56
+UPDATED DATE : 2026-07-31 08:28:37
+DEMO SITE    : -
+SOURCE CODE  : https://github.com/cahyadsn/halal
+================================================================================
+This program is free software; you can redistribute it and/or modify it under the
+terms of the MIT License.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+See the MIT License for more details
+
+copyright (c) 2026 by cahya dsn; cahyadsn@gmail.com
+================================================================================ */
+require_once 'inc/config.php';
+require_once 'inc/process.php';
+?><!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>Halal v0.1(beta)</title>
+    <title>Halal v<?php echo $app_ver;?></title>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta http-equiv="content-language" content="id" />
@@ -56,9 +38,7 @@ while($row=$resi->fetch_row())
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />    
     <link href="https://plus.google.com/106979874997502462275" rel="author" />
     <link href='http://fonts.googleapis.com/css?family=Share' rel='stylesheet' type='text/css' />
-    <link href='halal.css' rel='stylesheet' type='text/css'  media="screen"/>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.2/jquery.min.js"></script>
-    <script type="text/javascript" src="jquery.cluetip.js"></script>
+    <link href='assets/css/halal.css' rel='stylesheet' type='text/css'  media="screen"/>
   </head>
   <body>
     <div class="container">
@@ -93,12 +73,12 @@ while($row=$resi->fetch_row())
 if($s=="1"){
   echo "<div class=\"letterbar\">\n";
   foreach(range('a', 'z') as $letter) { 
-    echo "<a href=\"halal.php?l=".$letter."\">".strtoupper($letter)."</a>".($letter=='z'?"</div>\n":"\n "); 
+    echo "<a href=\"index.php?l=".$letter."\">".strtoupper($letter)."</a>".($letter=='z'?"</div>\n":"\n "); 
   }
 }
 echo "<div class=\"result\">Showing <b>".$i."</b> results for ".($s=="1"?"Ingredients":"E-Code")." ".$rst.$html;
 ?>  
     </div>
-  <script src="halal.min.js" type="text/javascript"></script>
+  <script src="assets/js/halal<?php echo ($app_env=='PRO'?'':'.min');?>.js" type="text/javascript"></script>
 </body>
 </html>  
